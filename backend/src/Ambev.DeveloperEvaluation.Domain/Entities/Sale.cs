@@ -57,7 +57,12 @@ namespace Ambev.DeveloperEvaluation.Domain.Entities
         /// <summary>
         /// Gets the total amount of the sale, which is the sum of all item totals.
         /// </summary>
-        public decimal TotalAmount => _items.Where(x => !x.IsCancelled).Sum(x => x.Total);
+        public decimal TotalAmount { get; private set; }
+
+        /// <summary>
+        /// Private constructor for Entity Framework.
+        /// </summary>
+        private Sale() { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Sale"/> class with the specified parameters.
@@ -94,6 +99,13 @@ namespace Ambev.DeveloperEvaluation.Domain.Entities
             CreatedAt = DateTime.UtcNow;
         }
 
+        private decimal CalculateTotal()
+        {
+            return _items
+                .Where(item => !item.IsCancelled)
+                .Sum(item => item.Total);
+        }
+
         /// <summary>
         /// Adds an item to the sale.
         /// </summary>
@@ -104,7 +116,7 @@ namespace Ambev.DeveloperEvaluation.Domain.Entities
         public void AddItem(Guid productId, string productName, int quantity, decimal unitPrice)
         {
             var item = new SaleItem(productId, productName, quantity, unitPrice);
-            _items.Add(item);
+            AddItem(item);
         }
 
         public void AddItem(SaleItem saleItem)
@@ -113,6 +125,7 @@ namespace Ambev.DeveloperEvaluation.Domain.Entities
                 throw new ArgumentNullException(nameof(saleItem), "Sale item cannot be null.");
 
             _items.Add(saleItem);
+            TotalAmount = CalculateTotal();
             UpdatedAt = DateTime.UtcNow;
         }
 
@@ -128,6 +141,7 @@ namespace Ambev.DeveloperEvaluation.Domain.Entities
                 item.Cancel();
             }
 
+            TotalAmount = CalculateTotal();
             UpdatedAt = DateTime.UtcNow;
         }
 

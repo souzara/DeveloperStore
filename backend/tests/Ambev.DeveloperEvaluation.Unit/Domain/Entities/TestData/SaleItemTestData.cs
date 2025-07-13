@@ -44,6 +44,17 @@ public static class SaleItemTestData
         return SaleItemFaker.Generate();
     }
 
+    /// <summary>
+    /// Generates a SaleItem with an invalid ProductId (empty GUID).
+    /// </summary>
+    /// <returns>A cancelled sale item</returns>
+    internal static SaleItem GenerateCancelledSaleItem()
+    {
+        var saleItem = SaleItemFaker.Generate();
+        saleItem.Cancel();
+        return saleItem;
+    }
+
 
     /// <summary>
     /// Generates a valid Product identifier using Faker.

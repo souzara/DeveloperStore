@@ -32,7 +32,8 @@ namespace Ambev.DeveloperEvaluation.Domain.Entities
         /// <summary>
         /// Calculates the total price for the sale item after applying the discount.
         /// </summary>
-        public decimal Total => (Quantity * UnitPrice) - Discount;
+        public decimal Total { get; private set; }
+
         /// <summary>
         /// Gets a value indicating whether the sale item has been cancelled.
         /// </summary>
@@ -47,6 +48,22 @@ namespace Ambev.DeveloperEvaluation.Domain.Entities
         /// Gets the date and time when the sale item was last updated.
         /// </summary>
         public DateTime? UpdatedAt { get; private set; }
+
+
+        /// <summary>
+        /// Gets the the sale associated with this sale item.
+        /// </summary>
+        public virtual Sale Sale { get; private set; }
+
+        /// <summary>
+        /// Gets the unique identifier for the sale associated with this sale item.
+        /// </summary>
+        public Guid SaleId { get; set; }
+
+        /// <summary>
+        /// Private constructor for Entity Framework.
+        /// </summary>
+        private SaleItem() { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SaleItem"/> class with the specified parameters.
@@ -74,6 +91,7 @@ namespace Ambev.DeveloperEvaluation.Domain.Entities
             Quantity = quantity;
             UnitPrice = unitPrice;
             Discount = CalculateDiscount(quantity, unitPrice);
+            Total = CalculateTotal();
             IsCancelled = false;
             CreatedAt = DateTime.UtcNow;
         }
@@ -91,6 +109,11 @@ namespace Ambev.DeveloperEvaluation.Domain.Entities
             if (quantity >= 4)
                 return quantity * price * 0.10m;
             return 0;
+        }
+
+        private decimal CalculateTotal()
+        {
+            return (Quantity * UnitPrice) - Discount;
         }
 
         /// <summary>

@@ -202,16 +202,11 @@ public class SaleTests
     {
         // Arrange
         var sale = SaleTestData.GenerateValidSale();
-        for (int i = 0; i < 2; i++)
-        {
-            var productId = SaleItemTestData.GenerateValidProductId();
-            var productName = SaleItemTestData.GenerateValidProductName();
-            var quantity = SaleItemTestData.GenerateValidQuantity();
-            var unitPrice = SaleItemTestData.GenerateValidUnitPrice();
-            sale.AddItem(productId, productName, quantity, unitPrice);
-        }
-        // Cancel the first item
-        sale.Items.First().Cancel();
+
+        var firstSaleItem = SaleItemTestData.GenerateValidSaleItem();
+        var secondSaleItem = SaleItemTestData.GenerateCancelledSaleItem();
+        sale.AddItem(firstSaleItem);
+        sale.AddItem(secondSaleItem);
         // Act
         var totalAmount = sale.TotalAmount;
         // Assert
