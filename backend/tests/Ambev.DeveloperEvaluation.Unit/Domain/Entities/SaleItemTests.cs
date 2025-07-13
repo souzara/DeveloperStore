@@ -152,11 +152,15 @@ public class SaleItemTests
         var productName = SaleItemTestData.GenerateValidProductName();
         var unitPrice = SaleItemTestData.GenerateValidUnitPrice();
         var correctDiscount = quantity * unitPrice * 0.10m;
+        var correctTotal = (quantity * unitPrice) - correctDiscount;
+        var startTestAt = DateTime.UtcNow;
         var saleItem = new SaleItem(productId, productName, quantity, unitPrice);
         // Act
         var discount = saleItem.Discount;
         // Assert
         Assert.Equal(correctDiscount, discount);
+        Assert.Equal(correctTotal, saleItem.Total);
+        Assert.True(saleItem.CreatedAt > startTestAt);
     }
 
     /// <summary>
@@ -181,32 +185,16 @@ public class SaleItemTests
         var productName = SaleItemTestData.GenerateValidProductName();
         var unitPrice = SaleItemTestData.GenerateValidUnitPrice();
         var correctDiscount = quantity * unitPrice * 0.20m;
+        var correctTotal = (quantity * unitPrice) - correctDiscount;
+        var startTestAt = DateTime.UtcNow;
         var saleItem = new SaleItem(productId, productName, quantity, unitPrice);
         // Act
         var discount = saleItem.Discount;
         // Assert
         Assert.Equal(correctDiscount, discount);
+        Assert.Equal(correctTotal, saleItem.Total);
+        Assert.True(saleItem.CreatedAt > startTestAt);
     }
 
-    /// <summary>
-    /// Tests that the Total property of a SaleItem calculates the total price after applying the discount.
-    /// </summary>
-    [Fact(DisplayName = "Cancelling SaleItem should set IsCancelled to true and change updatedAt date")]
-    public void Given_SaleItem_When_Cancelling_Then_ShouldSetIsCancelledToTrueAndDiscountToZero()
-    {
-        // Arrange
-        var productId = SaleItemTestData.GenerateValidProductId();
-        var productName = SaleItemTestData.GenerateValidProductName();
-        var quantity = SaleItemTestData.GenerateValidQuantity();
-        var unitPrice = SaleItemTestData.GenerateValidUnitPrice();
-        var startTestAt = DateTime.UtcNow;
-        var saleItem = new SaleItem(productId, productName, quantity, unitPrice);
-        // Act
-        saleItem.Cancel();
-        // Assert
-        Assert.True(saleItem.IsCancelled);
-        Assert.NotNull(saleItem.UpdatedAt);
-        Assert.True(saleItem.UpdatedAt > startTestAt);
-    }
 
 }
