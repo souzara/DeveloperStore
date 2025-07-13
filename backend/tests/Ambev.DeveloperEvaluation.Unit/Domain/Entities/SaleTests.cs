@@ -126,6 +126,7 @@ public class SaleTests
         var customerName = SaleTestData.GenerateValidCustomerName();
         var branchId = SaleTestData.GenerateValidBranchId();
         var branchName = SaleTestData.GenerateValidBranchName();
+        var startTestAt = DateTime.UtcNow;
 
         // Act
         var sale = new Sale(saleNumber, date, customerId, customerName, branchId, branchName);
@@ -138,7 +139,7 @@ public class SaleTests
         Assert.Equal(branchId, sale.BranchId);
         Assert.Equal(branchName, sale.BranchName);
         Assert.NotEqual(Guid.Empty, sale.Id);
-        Assert.True(sale.CreatedAt <= DateTime.UtcNow);
+        Assert.True(sale.CreatedAt > startTestAt);
         Assert.Null(sale.UpdatedAt);
         Assert.False(sale.IsCancelled);
     }
@@ -173,6 +174,7 @@ public class SaleTests
     public void Given_Sale_When_CancellingSale_Then_IsCancelledShouldBeTrueAndItemsShouldBeCancelled()
     {
         // Arrange
+        var startTestAt = DateTime.UtcNow;
         var sale = SaleTestData.GenerateValidSale();
         for (int i = 0; i < 2; i++)
         {
@@ -187,6 +189,33 @@ public class SaleTests
         // Assert
         Assert.True(sale.IsCancelled);
         Assert.All(sale.Items, item => Assert.True(item.IsCancelled));
+        Assert.NotNull(sale.UpdatedAt);
+        Assert.True(sale.UpdatedAt >= startTestAt);
+    }
+
+
+    /// <summary>
+    /// Tests that the TotalAmount property should not include cancelled items when calculating the total amount of the sale.
+    /// </summary>
+    [Fact(DisplayName = "TotalAmount should not include cancelled items")]
+    public void Given_SaleWithCancelledItems_When_CalculatingTotalAmount_Then_ShouldNotIncludeCancelledItems()
+    {
+        // Arrange
+        var sale = SaleTestData.GenerateValidSale();
+        for (int i = 0; i < 2; i++)
+        {
+            var productId = SaleItemTestData.GenerateValidProductId();
+            var productName = SaleItemTestData.GenerateValidProductName();
+            var quantity = SaleItemTestData.GenerateValidQuantity();
+            var unitPrice = SaleItemTestData.GenerateValidUnitPrice();
+            sale.AddItem(productId, productName, quantity, unitPrice);
+        }
+        // Cancel the first item
+        sale.Items.First().Cancel();
+        // Act
+        var totalAmount = sale.TotalAmount;
+        // Assert
+        Assert.Equal(sale.Items.Where(x => !x.IsCancelled).Sum(x => x.Total), totalAmount);
     }
 
 }

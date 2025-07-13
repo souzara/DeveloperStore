@@ -30,10 +30,20 @@ public static class SaleItemTestData
     /// Generates a valid SaleItem list with randomized data.
     /// </summary>
     /// <returns>A valid sale item list.</returns>
-    internal static List<SaleItem> GenerateValidSaleItem()
+    internal static List<SaleItem> GenerateValidSaleItemList()
     {
         return SaleItemFaker.Generate(5);
     }
+
+    /// <summary>
+    /// Generates a single valid SaleItem with randomized data.
+    /// </summary>
+    /// <returns>A valid sale item</returns>
+    internal static SaleItem GenerateValidSaleItem()
+    {
+        return SaleItemFaker.Generate();
+    }
+
 
     /// <summary>
     /// Generates a valid Product identifier using Faker.
@@ -70,4 +80,5 @@ public static class SaleItemTestData
     {
         return new Faker().Finance.Amount(1.0m, 1000.0m);
     }
+
 }

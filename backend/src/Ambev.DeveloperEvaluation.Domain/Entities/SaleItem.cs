@@ -1,4 +1,6 @@
-﻿using Ambev.DeveloperEvaluation.Domain.Common;
+﻿using Ambev.DeveloperEvaluation.Common.Validation;
+using Ambev.DeveloperEvaluation.Domain.Common;
+using Ambev.DeveloperEvaluation.Domain.Validation;
 
 namespace Ambev.DeveloperEvaluation.Domain.Entities
 {
@@ -36,6 +38,15 @@ namespace Ambev.DeveloperEvaluation.Domain.Entities
         /// </summary>
         public bool IsCancelled { get; private set; }
 
+        /// <summary>
+        /// Gets the date and time when the sale item was created.
+        /// </summary>
+        public DateTime CreatedAt { get; private set; }
+
+        /// <summary>
+        /// Gets the date and time when the sale item was last updated.
+        /// </summary>
+        public DateTime? UpdatedAt { get; private set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SaleItem"/> class with the specified parameters.
@@ -64,6 +75,7 @@ namespace Ambev.DeveloperEvaluation.Domain.Entities
             UnitPrice = unitPrice;
             Discount = CalculateDiscount(quantity, unitPrice);
             IsCancelled = false;
+            CreatedAt = DateTime.UtcNow;
         }
 
         /// <summary>
@@ -87,6 +99,20 @@ namespace Ambev.DeveloperEvaluation.Domain.Entities
         public void Cancel()
         {
             IsCancelled = true;
+            UpdatedAt = DateTime.UtcNow;
         }
+
+        public ValidationResultDetail Validate()
+        {
+            var validator = new SaleItemValidator();
+            var result = validator.Validate(this);
+
+            return new ValidationResultDetail
+            {
+                IsValid = result.IsValid,
+                Errors = result.Errors.Select(e => (ValidationErrorDetail)e)
+            };
+        }
+
     }
 }

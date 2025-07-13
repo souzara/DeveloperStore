@@ -57,7 +57,7 @@ namespace Ambev.DeveloperEvaluation.Domain.Entities
         /// <summary>
         /// Gets the total amount of the sale, which is the sum of all item totals.
         /// </summary>
-        public decimal TotalAmount => _items.Sum(x => x.Total);
+        public decimal TotalAmount => _items.Where(x => !x.IsCancelled).Sum(x => x.Total);
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Sale"/> class with the specified parameters.
@@ -107,6 +107,16 @@ namespace Ambev.DeveloperEvaluation.Domain.Entities
             _items.Add(item);
         }
 
+        public void AddItem(SaleItem saleItem)
+        {
+            if (saleItem == null)
+                throw new ArgumentNullException(nameof(saleItem), "Sale item cannot be null.");
+
+            _items.Add(saleItem);
+            UpdatedAt = DateTime.UtcNow;
+        }
+
+
         /// <summary>
         /// Cancels the sale and all its items.
         /// </summary>
@@ -117,6 +127,10 @@ namespace Ambev.DeveloperEvaluation.Domain.Entities
             {
                 item.Cancel();
             }
+
+            UpdatedAt = DateTime.UtcNow;
         }
+
+
     }
 }
