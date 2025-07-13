@@ -46,14 +46,11 @@ namespace Ambev.DeveloperEvaluation.Domain.Entities
         /// Gets the date and time when the sale was last updated.
         /// </summary>
         public DateTime? UpdatedAt { get; set; }
-        /// <summary>
-        /// Represents the collection of items in the sale.
-        /// </summary>
-        private readonly List<SaleItem> _items = new();
+
         /// <summary>
         /// Gets the collection of items in the sale.
         /// </summary>
-        public IReadOnlyCollection<SaleItem> Items => _items.AsReadOnly();
+        public virtual List<SaleItem> Items { get; set; } = new();
         /// <summary>
         /// Gets the total amount of the sale, which is the sum of all item totals.
         /// </summary>
@@ -101,7 +98,7 @@ namespace Ambev.DeveloperEvaluation.Domain.Entities
 
         private decimal CalculateTotal()
         {
-            return _items
+            return Items
                 .Where(item => !item.IsCancelled)
                 .Sum(item => item.Total);
         }
@@ -124,7 +121,7 @@ namespace Ambev.DeveloperEvaluation.Domain.Entities
             if (saleItem == null)
                 throw new ArgumentNullException(nameof(saleItem), "Sale item cannot be null.");
 
-            _items.Add(saleItem);
+            Items.Add(saleItem);
             TotalAmount = CalculateTotal();
             UpdatedAt = DateTime.UtcNow;
         }
@@ -136,7 +133,7 @@ namespace Ambev.DeveloperEvaluation.Domain.Entities
         public void Cancel()
         {
             IsCancelled = true;
-            foreach (var item in _items)
+            foreach (var item in Items)
             {
                 item.Cancel();
             }
