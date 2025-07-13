@@ -1,4 +1,4 @@
-﻿using Ambev.DeveloperEvaluation.Common.Validation;
+﻿using FluentValidation.Results;
 
 namespace Ambev.DeveloperEvaluation.Application.Sales.CreateSaleItem;
 
@@ -38,15 +38,10 @@ public class CreateSaleItemCommand
     /// Validates the current instance of <see cref="CreateSaleItemCommand"/> using the <see cref="CreateSaleItemValidator"/>.
     /// </summary>
     /// <returns>ValidationResultDetail containing the validation status and any errors encountered during validation.</returns>
-    public ValidationResultDetail Validate()
+    public ValidationResult Validate()
     {
         var validator = new CreateSaleItemValidator();
-        var result = validator.Validate(this);
-        return new ValidationResultDetail
-        {
-            IsValid = result.IsValid,
-            Errors = result.Errors.Select(o => (ValidationErrorDetail)o)
-        };
+        return validator.Validate(this);
     }
 
 }

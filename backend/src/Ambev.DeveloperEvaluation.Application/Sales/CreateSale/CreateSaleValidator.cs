@@ -1,4 +1,5 @@
-﻿using FluentValidation;
+﻿using Ambev.DeveloperEvaluation.Application.Sales.CreateSaleItem;
+using FluentValidation;
 
 namespace Ambev.DeveloperEvaluation.Application.Sales.CreateSale;
 
@@ -41,5 +42,11 @@ internal class CreateSaleValidator : AbstractValidator<CreateSaleCommand>
             .MaximumLength(200).WithMessage("Branch name cannot exceed 200 characters.");
         RuleFor(sale => sale.Items).Must(items => items != null && items.Any())
             .WithMessage("Sale must contain at least one item.");
+        RuleForEach(sale => sale.Items)
+            .SetValidator(new CreateSaleItemValidator())
+            .WithMessage("Each item in the sale must be valid.");
+
+
+
     }
 }
