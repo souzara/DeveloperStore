@@ -1,4 +1,6 @@
-﻿using Ambev.DeveloperEvaluation.Domain.Entities;
+﻿using Ambev.DeveloperEvaluation.Domain.Common;
+using Ambev.DeveloperEvaluation.Domain.Entities;
+using Ambev.DeveloperEvaluation.Domain.Filters.Sale;
 
 namespace Ambev.DeveloperEvaluation.Domain.Repositories;
 
@@ -30,6 +32,14 @@ public interface ISaleRepository
     /// <param name="cancellationToken">Cancellation token</param>
     /// <returns>The sale with its items if found, null otherwise.</returns>
     Task<Sale?> GetByIdWithItemsAsync(Guid id, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Retrieves a paginated list of sales based on the provided filter criteria
+    /// </summary>
+    /// <param name="saleFilter">Sale filter</param>
+    /// <param name="cancellationToken">Cancellation token</param>
+    /// <returns>Paginated result containing a list of sales that match the filter criteria.</returns>
+    Task<PaginatedData<Sale>> ListAsync(SaleFilter saleFilter, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Retrieves all sales associated with a specific customer by their unique identifier

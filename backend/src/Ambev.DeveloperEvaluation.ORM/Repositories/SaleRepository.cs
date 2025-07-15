@@ -1,4 +1,6 @@
-﻿using Ambev.DeveloperEvaluation.Domain.Entities;
+﻿using Ambev.DeveloperEvaluation.Domain.Common;
+using Ambev.DeveloperEvaluation.Domain.Entities;
+using Ambev.DeveloperEvaluation.Domain.Filters.Sale;
 using Ambev.DeveloperEvaluation.Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
 
@@ -58,6 +60,48 @@ public class SaleRepository : ISaleRepository
             .Include(s => s.Items)
             .FirstOrDefaultAsync(s => s.Id == id, cancellationToken);
     }
+
+    /// <summary>
+    /// Retrieves a paginated list of sales based on the provided filter criteria
+    /// </summary>
+    /// <param name="saleFilter">Sale filter</param>
+    /// <param name="cancellationToken">Cancellation token</param>
+    /// <returns>Paginated result containing a list of sales that match the filter criteria.</returns>
+    public async Task<PaginatedData<Sale>> ListAsync(SaleFilter saleFilter, CancellationToken cancellationToken = default)
+    {
+        var query = _context.Sales.AsQueryable();
+
+        if (saleFilter.SaleIds?.Any() == true)
+            query = query.Where(s => saleFilter.SaleIds.Contains(s.Id));
+        if (!string.IsNullOrWhiteSpace(saleFilter.SaleNumber))
+            query = query.Where(s => s.SaleNumber == saleFilter.SaleNumber);
+        if (saleFilter.BranchId.HasValue)
+            query = query.Where(s => s.BranchId == saleFilter.BranchId.Value);
+        if (!string.IsNullOrWhiteSpace(saleFilter.BranchName))
+            query = query.Where(s => s.BranchName.StartsWith(saleFilter.BranchName));
+        if (saleFilter.CustomerId.HasValue)
+            query = query.Where(s => s.CustomerId == saleFilter.CustomerId.Value);
+        if (!string.IsNullOrWhiteSpace(saleFilter.CustomerName))
+            query = query.Where(s => s.CustomerName.StartsWith(saleFilter.CustomerName));
+        if (saleFilter.FromDate.HasValue)
+            query = query.Where(s => s.Date >= saleFilter.FromDate.Value);
+        if (saleFilter.ToDate.HasValue)
+            query = query.Where(s => s.Date <= saleFilter.ToDate.Value);
+        if (saleFilter.IsCancelled.HasValue)
+            query = query.Where(s => s.IsCancelled == saleFilter.IsCancelled.Value);
+        if (saleFilter.IncludeItems)
+            query = query.Include(s => s.Items);
+
+        var totalCount = await query.CountAsync(cancellationToken);
+
+        var sales = await query
+            .OrderByDescending(s => s.CreatedAt)
+            .Skip((saleFilter.Page - 1) * saleFilter.PageSize)
+            .Take(saleFilter.PageSize)
+            .ToListAsync(cancellationToken);
+        return new PaginatedData<Sale>(sales, saleFilter.Page, saleFilter.PageSize, totalCount);
+    }
+
 
     /// <summary>
     /// Retrieves all sales associated with a specific customer by their unique identifier

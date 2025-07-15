@@ -2,10 +2,12 @@
 using Ambev.DeveloperEvaluation.Application.Sales.CreateSale;
 using Ambev.DeveloperEvaluation.Application.Sales.DeleteSale;
 using Ambev.DeveloperEvaluation.Application.Sales.GetSale;
+using Ambev.DeveloperEvaluation.Application.Sales.ListSales;
 using Ambev.DeveloperEvaluation.Application.Sales.UpdateSale;
 using Ambev.DeveloperEvaluation.WebApi.Common;
 using Ambev.DeveloperEvaluation.WebApi.Features.Sales.CreateSale;
 using Ambev.DeveloperEvaluation.WebApi.Features.Sales.GetSale;
+using Ambev.DeveloperEvaluation.WebApi.Features.Sales.ListSales;
 using Ambev.DeveloperEvaluation.WebApi.Features.Sales.UpdateSale;
 using AutoMapper;
 using MediatR;
@@ -61,6 +63,36 @@ public class SalesController : BaseController
             Message = "Sale retrieved successfully",
             Data = _mapper.Map<GetSaleResponse>(response)
         });
+    }
+
+    /// <summary>
+    /// Lists all sales with optional filters such as customer ID, branch ID, and date range.
+    /// </summary>
+    /// <param name="request">
+    /// The request object containing filtering options such as sale IDs, sale number, branch ID, customer ID, date range, and pagination parameters.
+    /// </param>
+    /// <param name="cancellationToken">Cancellation token</param>
+    /// <returns>The list of sales matching the specified filters, along with pagination information.</returns>
+    [HttpGet]
+    [ProducesResponseType(typeof(ApiResponseWithData<IEnumerable<GetSaleResponse>>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> ListSales([FromQuery] ListSalesRequest request, CancellationToken cancellationToken)
+    {
+        var query = _mapper.Map<ListSalesCommand>(request);
+
+        var validationResult = query.Validate();
+
+        if (!validationResult.IsValid)
+            return BadRequest(validationResult.Errors);
+
+        var response = await _mediator.Send(query, cancellationToken);
+
+        var apiResponse = _mapper.Map<PaginatedResponse<GetSaleResponse>>(response);
+
+        apiResponse.Message = "Sales retrieved successfully";
+        apiResponse.Success = true;
+
+        return Ok(apiResponse);
     }
 
     /// <summary>
