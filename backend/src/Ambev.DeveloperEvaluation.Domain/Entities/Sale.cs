@@ -134,9 +134,7 @@ namespace Ambev.DeveloperEvaluation.Domain.Entities
         {
             IsCancelled = true;
             foreach (var item in Items)
-            {
                 item.Cancel();
-            }
 
             TotalAmount = CalculateTotal();
             UpdatedAt = DateTime.UtcNow;

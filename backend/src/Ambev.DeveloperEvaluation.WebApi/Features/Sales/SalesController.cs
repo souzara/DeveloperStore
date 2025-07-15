@@ -93,6 +93,12 @@ public class SalesController : BaseController
         });
     }
 
+    /// <summary>
+    /// Deletes an existing sale by its unique identifier.
+    /// </summary>
+    /// <param name="id">The unique identifier of the sale to delete</param>
+    /// <param name="cancellationToken">Cancellation token</param>
+    /// <returns>An IActionResult indicating the result of the update operation.</returns>
     [HttpDelete]
     [Route("{id:guid}")]
     [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status200OK)]
@@ -108,6 +114,29 @@ public class SalesController : BaseController
         {
             Success = true,
             Message = "Sale deleted successfully"
+        });
+    }
+
+    /// <summary>
+    /// Cancels an existing sale by its unique identifier.
+    /// </summary>
+    /// <param name="id">The unique identifier of the sale to delete</param>
+    /// <param name="cancellationToken">Cancellation token</param>
+    /// <returns>An IActionResult indicating the result of the update operation.</returns>
+    [HttpPatch]
+    [Route("{id:guid}/cancel")]
+    [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> CancelSale(Guid id, CancellationToken cancellationToken)
+    {
+        var command = new CancelSaleCommand { Id = id };
+        var response = await _mediator.Send(command, cancellationToken);
+        if (!response)
+            return NotFound("Sale not found");
+        return Ok(new ApiResponse
+        {
+            Success = true,
+            Message = "Sale cancelled successfully"
         });
     }
 }
