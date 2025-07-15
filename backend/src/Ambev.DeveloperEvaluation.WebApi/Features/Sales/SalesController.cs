@@ -1,6 +1,8 @@
 ﻿using Ambev.DeveloperEvaluation.Application.Sales.CreateSale;
+using Ambev.DeveloperEvaluation.Application.Sales.UpdateSale;
 using Ambev.DeveloperEvaluation.WebApi.Common;
 using Ambev.DeveloperEvaluation.WebApi.Features.Sales.CreateSale;
+using Ambev.DeveloperEvaluation.WebApi.Features.Sales.UpdateSale;
 using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -55,6 +57,57 @@ public class SalesController : BaseController
             Success = true,
             Message = "Sale created successfully",
             Data = _mapper.Map<CreateSaleResponse>(response)
+        });
+    }
+    /// <summary>
+    /// Updates an existing sale in the system
+    /// </summary>
+    /// <param name="id">The unique identifier of the sale to update.</param>
+    /// <param name="request">Request object containing the updated sale details.</param>
+    /// <param name="cancellationToken">Cancellation token</param>
+    /// <returns>An IActionResult indicating the result of the update operation.</returns>
+    [HttpPut]
+    [Route("{id:guid}")]
+    [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> UpdateSale(Guid id, [FromBody] UpdateSaleRequest request, CancellationToken cancellationToken)
+    {
+        var command = _mapper.Map<UpdateSaleCommand>(request);
+        command.Id = id;
+
+        var validationResult = command.Validate();
+
+        if (!validationResult.IsValid)
+            return BadRequest(validationResult.Errors);
+
+        var response = await _mediator.Send(command, cancellationToken);
+
+        if (!response)
+            return NotFound("Sale not found");
+
+        return Ok(new ApiResponse
+        {
+            Success = true,
+            Message = "Sale updated successfully"
+        });
+    }
+
+    [HttpDelete]
+    [Route("{id:guid}")]
+    [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> DeleteSale(Guid id, CancellationToken cancellationToken)
+    {
+        var command = new DeleteSaleCommand { Id = id };
+        var response = await _mediator.Send(command, cancellationToken);
+        if (!response)
+            return NotFound("Sale not found");
+
+        return Ok(new ApiResponse
+        {
+            Success = true,
+            Message = "Sale deleted successfully"
         });
     }
 }

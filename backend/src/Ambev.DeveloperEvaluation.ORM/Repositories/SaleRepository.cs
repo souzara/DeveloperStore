@@ -39,9 +39,23 @@ public class SaleRepository : ISaleRepository
     /// <param name="id">Sale unique identifier</param>
     /// <param name="cancellationToken">Cancellation token</param>
     /// <returns>The sale item if found, null otherwise</returns>
-    public async Task<Sale?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
+    public Task<Sale?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
     {
-        return await _context.Sales
+        return _context.Sales
+            .FirstOrDefaultAsync(s => s.Id == id, cancellationToken);
+    }
+
+
+    /// <summary>
+    /// Retrieves a sale by its unique identifier along with its items
+    /// </summary>
+    /// <param name="id">Sale unique identifier</param>
+    /// <param name="cancellationToken">Cancellation token</param>
+    /// <returns>The sale with its items if found, null otherwise.</returns>
+    public Task<Sale?> GetByIdWithItemsAsync(Guid id, CancellationToken cancellationToken = default)
+    {
+        return _context.Sales
+            .Include(s => s.Items)
             .FirstOrDefaultAsync(s => s.Id == id, cancellationToken);
     }
 
@@ -107,5 +121,7 @@ public class SaleRepository : ISaleRepository
 
         return updated > 0;
     }
+
+
 }
 

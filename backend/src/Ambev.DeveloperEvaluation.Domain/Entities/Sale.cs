@@ -142,6 +142,42 @@ namespace Ambev.DeveloperEvaluation.Domain.Entities
             UpdatedAt = DateTime.UtcNow;
         }
 
+        /// <summary>
+        /// Updates the sale with new details.
+        /// </summary>
+        /// <param name="saleNumber">
+        /// Sale number for the new sale.
+        /// </param>
+        /// <param name="date">
+        /// Date of the sale.
+        /// </param>
+        /// <param name="customerId">Customer identifier for the sale.</param>
+        /// <param name="customerName">Customer name for the sale.</param>
+        /// <param name="branchId">Branch identifier for the sale</param>
+        /// <param name="branchName">Branch name for the sale.</param>
+        /// <exception cref="ArgumentException">This exception is thrown when any of the parameters are invalid.</exception>
+        public void UpdateSale(string saleNumber, DateTime date, Guid customerId, string customerName, Guid branchId, string branchName)
+        {
+            if (string.IsNullOrWhiteSpace(saleNumber))
+                throw new ArgumentException("Sale number cannot be null or empty.", nameof(saleNumber));
+            if (date == default)
+                throw new ArgumentException("Date must be a valid date.", nameof(date));
+            if (customerId == Guid.Empty)
+                throw new ArgumentException("Customer ID cannot be empty.", nameof(customerId));
+            if (string.IsNullOrWhiteSpace(customerName))
+                throw new ArgumentException("Customer name cannot be null or empty.", nameof(customerName));
+            if (branchId == Guid.Empty)
+                throw new ArgumentException("Branch ID cannot be empty.", nameof(branchId));
+            if (string.IsNullOrWhiteSpace(branchName))
+                throw new ArgumentException("Branch name cannot be null or empty.", nameof(branchName));
 
+            SaleNumber = saleNumber;
+            Date = date;
+            CustomerId = customerId;
+            CustomerName = customerName;
+            BranchId = branchId;
+            BranchName = branchName;
+            UpdatedAt = DateTime.UtcNow;
+        }
     }
 }

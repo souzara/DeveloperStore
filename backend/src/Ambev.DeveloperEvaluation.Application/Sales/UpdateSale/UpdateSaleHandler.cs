@@ -1,4 +1,5 @@
-﻿using Ambev.DeveloperEvaluation.Domain.Repositories;
+﻿using Ambev.DeveloperEvaluation.Application.Sales.UpdateSale;
+using Ambev.DeveloperEvaluation.Domain.Repositories;
 using AutoMapper;
 using FluentValidation;
 using MediatR;
@@ -8,7 +9,7 @@ namespace Ambev.DeveloperEvaluation.Application.Sales.CreateSale;
 /// <summary>
 /// Handler for processing CreateSaleCommand requests
 /// </summary>
-public class CreateSaleHandler : IRequestHandler<CreateSaleCommand, CreateSaleResult>
+public class UpdateSaleHandler : IRequestHandler<UpdateSaleCommand, bool>
 {
     private readonly ISaleRepository _saleRepository;
     private readonly IMapper _mapper;
@@ -18,31 +19,40 @@ public class CreateSaleHandler : IRequestHandler<CreateSaleCommand, CreateSaleRe
     /// </summary>
     /// <param name="saleRepository">The sale repository</param>
     /// <param name="mapper">The AutoMapper instance</param>
-    public CreateSaleHandler(ISaleRepository saleRepository, IMapper mapper)
+    public UpdateSaleHandler(ISaleRepository saleRepository, IMapper mapper)
     {
         _saleRepository = saleRepository;
         _mapper = mapper;
     }
 
     /// <summary>
-    /// Handles the CreateSaleCommand to create a new sale in the repository
+    /// Initializes a new instance of CreateSaleHandler
     /// </summary>
     /// <param name="request">The CreateSale command</param>
     /// <param name="cancellationToken">Cancellation token</param>
     /// <returns>The created sale datails</returns>
-    public async Task<CreateSaleResult> Handle(CreateSaleCommand command, CancellationToken cancellationToken)
+    public async Task<bool> Handle(UpdateSaleCommand command, CancellationToken cancellationToken)
     {
         var validationResult = command.Validate();
 
         if (!validationResult.IsValid)
             throw new ValidationException(validationResult.Errors);
 
-        var sale = _mapper.Map<Domain.Entities.Sale>(command);
-        var createdSale = await _saleRepository.CreateAsync(sale, cancellationToken);
+        var existingSale = await _saleRepository.GetByIdAsync(command.Id, cancellationToken);
 
-        return new CreateSaleResult
-        {
-            Id = createdSale.Id
-        };
+        if (existingSale == null)
+            return false;
+
+        existingSale.UpdateSale(
+            command.SaleNumber,
+            command.Date,
+            command.CustomerId,
+            command.CustomerName,
+            command.BranchId,
+            command.BranchName
+        );
+
+        return await _saleRepository.UpdateAsync(existingSale, cancellationToken);
+
     }
 }

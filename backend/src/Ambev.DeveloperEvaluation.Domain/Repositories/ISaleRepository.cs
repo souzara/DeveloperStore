@@ -20,8 +20,16 @@ public interface ISaleRepository
     /// </summary>
     /// <param name="id">Sale unique identifier</param>
     /// <param name="cancellationToken">Cancellation token</param>
-    /// <returns>The sale item if found, null otherwise</returns>
+    /// <returns>The sale if found, null otherwise</returns>
     Task<Sale?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Retrieves a sale by its unique identifier along with its items
+    /// </summary>
+    /// <param name="id">Sale unique identifier</param>
+    /// <param name="cancellationToken">Cancellation token</param>
+    /// <returns>The sale with its items if found, null otherwise.</returns>
+    Task<Sale?> GetByIdWithItemsAsync(Guid id, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Retrieves all sales associated with a specific customer by their unique identifier

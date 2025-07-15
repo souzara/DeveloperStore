@@ -213,4 +213,139 @@ public class SaleTests
         Assert.Equal(sale.Items.Where(x => !x.IsCancelled).Sum(x => x.Total), totalAmount);
     }
 
+
+    /// <summary>
+    /// Tests that updating a sale with an empty SaleNumber should throw an ArgumentException.
+    /// </summary>
+    [Fact(DisplayName = "Updating sale with empty SaleNumber should throw ArgumentException")]
+    public void Given_EmptySaleNumber_When_UpdatingSale_Then_ShouldThrowArgumentException()
+    {
+        // Arrange
+        var sale = SaleTestData.GenerateValidSale();
+        var saleNumber = string.Empty;
+        var date = SaleTestData.GenerateValidSaleDate();
+        var customerId = SaleTestData.GenerateValidCustomerId();
+        var customerName = SaleTestData.GenerateValidCustomerName();
+        var branchId = SaleTestData.GenerateValidBranchId();
+        var branchName = SaleTestData.GenerateValidBranchName();
+        // Act & Assert
+        Assert.Throws<ArgumentException>(() => sale.UpdateSale(saleNumber, date, customerId, customerName, branchId, branchName));
+    }
+
+    /// <summary>
+    /// Tests that updating a sale with a default DateTime value should throw an ArgumentException.
+    /// </summary>
+    [Fact(DisplayName = "Updating sale with default DateTime should throw ArgumentException")]
+    public void Given_DefaultDateTime_When_UpdatingSale_Then_ShouldThrowArgumentException()
+    {
+        // Arrange
+        var sale = SaleTestData.GenerateValidSale();
+        var saleNumber = SaleTestData.GenerateValidSaleNumber();
+        DateTime date = default;
+        var customerId = SaleTestData.GenerateValidCustomerId();
+        var customerName = SaleTestData.GenerateValidCustomerName();
+        var branchId = SaleTestData.GenerateValidBranchId();
+        var branchName = SaleTestData.GenerateValidBranchName();
+        // Act & Assert
+        Assert.Throws<ArgumentException>(() => sale.UpdateSale(saleNumber, date, customerId, customerName, branchId, branchName));
+    }
+
+    /// <summary>
+    /// Tests that updating a sale with an empty CustomerId should throw an ArgumentException.
+    /// </summary>
+    [Fact(DisplayName = "Updating sale with empty CustomerId should throw ArgumentException")]
+    public void Given_EmptyCustomerId_When_UpdatingSale_Then_ShouldThrowArgumentException()
+    {
+        // Arrange
+        var sale = SaleTestData.GenerateValidSale();
+        var saleNumber = SaleTestData.GenerateValidSaleNumber();
+        var date = SaleTestData.GenerateValidSaleDate();
+        var customerId = Guid.Empty;
+        var customerName = SaleTestData.GenerateValidCustomerName();
+        var branchId = SaleTestData.GenerateValidBranchId();
+        var branchName = SaleTestData.GenerateValidBranchName();
+        // Act & Assert
+        Assert.Throws<ArgumentException>(() => sale.UpdateSale(saleNumber, date, customerId, customerName, branchId, branchName));
+    }
+
+    /// <summary>
+    /// Tests that updating a sale with an empty CustomerName should throw an ArgumentException.
+    /// </summary>
+    [Fact(DisplayName = "Updating sale with empty CustomerName should throw ArgumentException")]
+    public void Given_EmptyCustomerName_When_UpdatingSale_Then_ShouldThrowArgumentException()
+    {
+        // Arrange
+        var sale = SaleTestData.GenerateValidSale();
+        var saleNumber = SaleTestData.GenerateValidSaleNumber();
+        var date = SaleTestData.GenerateValidSaleDate();
+        var customerId = SaleTestData.GenerateValidCustomerId();
+        var customerName = string.Empty;
+        var branchId = SaleTestData.GenerateValidBranchId();
+        var branchName = SaleTestData.GenerateValidBranchName();
+        // Act & Assert
+        Assert.Throws<ArgumentException>(() => sale.UpdateSale(saleNumber, date, customerId, customerName, branchId, branchName));
+    }
+
+    /// <summary>
+    /// Tests that updating a sale with an empty BranchId should throw an ArgumentException.
+    /// </summary>
+    [Fact(DisplayName = "Updating sale with empty BranchId should throw ArgumentException")]
+    public void Given_EmptyBranchId_When_UpdatingSale_Then_ShouldThrowArgumentException()
+    {
+        // Arrange
+        var sale = SaleTestData.GenerateValidSale();
+        var saleNumber = SaleTestData.GenerateValidSaleNumber();
+        var date = SaleTestData.GenerateValidSaleDate();
+        var customerId = SaleTestData.GenerateValidCustomerId();
+        var customerName = SaleTestData.GenerateValidCustomerName();
+        var branchId = Guid.Empty;
+        var branchName = SaleTestData.GenerateValidBranchName();
+        // Act & Assert
+        Assert.Throws<ArgumentException>(() => sale.UpdateSale(saleNumber, date, customerId, customerName, branchId, branchName));
+    }
+
+    /// <summary>
+    /// Tests that updating a sale with an empty BranchName should throw an ArgumentException.
+    /// </summary>
+    [Fact(DisplayName = "Updating sale with empty BranchName should throw ArgumentException")]
+    public void Given_EmptyBranchName_When_UpdatingSale_Then_ShouldThrowArgumentException()
+    {
+        // Arrange
+        var sale = SaleTestData.GenerateValidSale();
+        var saleNumber = SaleTestData.GenerateValidSaleNumber();
+        var date = SaleTestData.GenerateValidSaleDate();
+        var customerId = SaleTestData.GenerateValidCustomerId();
+        var customerName = SaleTestData.GenerateValidCustomerName();
+        var branchId = SaleTestData.GenerateValidBranchId();
+        var branchName = string.Empty;
+        // Act & Assert
+        Assert.Throws<ArgumentException>(() => sale.UpdateSale(saleNumber, date, customerId, customerName, branchId, branchName));
+    }
+
+    /// <summary>
+    /// Tests that updating a sale with valid parameters should succeed and update the Sale object properties accordingly.
+    /// </summary>
+    [Fact(DisplayName = "Updating sale with valid parameters should succeed")]
+    public void Given_ValidParameters_When_UpdatingSale_Then_ShouldSucceed()
+    {
+        // Arrange
+        var sale = SaleTestData.GenerateValidSale();
+        var saleNumber = SaleTestData.GenerateValidSaleNumber();
+        var date = SaleTestData.GenerateValidSaleDate();
+        var customerId = SaleTestData.GenerateValidCustomerId();
+        var customerName = SaleTestData.GenerateValidCustomerName();
+        var branchId = SaleTestData.GenerateValidBranchId();
+        var branchName = SaleTestData.GenerateValidBranchName();
+        var startTestAt = DateTime.UtcNow;
+        // Act
+        sale.UpdateSale(saleNumber, date, customerId, customerName, branchId, branchName);
+        // Assert
+        Assert.Equal(saleNumber, sale.SaleNumber);
+        Assert.Equal(date, sale.Date);
+        Assert.Equal(customerId, sale.CustomerId);
+        Assert.Equal(customerName, sale.CustomerName);
+        Assert.Equal(branchId, sale.BranchId);
+        Assert.Equal(branchName, sale.BranchName);
+        Assert.True(sale.UpdatedAt >= startTestAt);
+    }
 }
