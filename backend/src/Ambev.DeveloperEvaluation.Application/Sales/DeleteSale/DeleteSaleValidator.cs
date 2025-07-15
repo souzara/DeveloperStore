@@ -1,7 +1,7 @@
 ﻿using Ambev.DeveloperEvaluation.Application.Sales.UpdateSale;
 using FluentValidation;
 
-namespace Ambev.DeveloperEvaluation.Application.Sales.CreateSale;
+namespace Ambev.DeveloperEvaluation.Application.Sales.DeleteSale;
 
 /// <summary>
 /// Validation rules for DeleteSaleCommand that ensures the sale ID is provided and not empty.

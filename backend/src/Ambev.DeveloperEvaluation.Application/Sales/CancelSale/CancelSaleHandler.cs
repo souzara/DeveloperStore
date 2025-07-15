@@ -1,9 +1,8 @@
-﻿using Ambev.DeveloperEvaluation.Application.Sales.UpdateSale;
-using Ambev.DeveloperEvaluation.Domain.Repositories;
+﻿using Ambev.DeveloperEvaluation.Domain.Repositories;
 using AutoMapper;
 using MediatR;
 
-namespace Ambev.DeveloperEvaluation.Application.Sales.CreateSale;
+namespace Ambev.DeveloperEvaluation.Application.Sales.CancelSale;
 
 /// <summary>
 /// Handle for canceling a sale.

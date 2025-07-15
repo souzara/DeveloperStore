@@ -1,7 +1,6 @@
-﻿using Ambev.DeveloperEvaluation.Application.Sales.CreateSale;
-using FluentValidation.Results;
+﻿using FluentValidation.Results;
 using MediatR;
-namespace Ambev.DeveloperEvaluation.Application.Sales.UpdateSale;
+namespace Ambev.DeveloperEvaluation.Application.Sales.DeleteSale;
 
 /// <summary>
 /// Command for deleting an existing sale.

@@ -1,7 +1,11 @@
-﻿using Ambev.DeveloperEvaluation.Application.Sales.CreateSale;
+﻿using Ambev.DeveloperEvaluation.Application.Sales.CancelSale;
+using Ambev.DeveloperEvaluation.Application.Sales.CreateSale;
+using Ambev.DeveloperEvaluation.Application.Sales.DeleteSale;
+using Ambev.DeveloperEvaluation.Application.Sales.GetSale;
 using Ambev.DeveloperEvaluation.Application.Sales.UpdateSale;
 using Ambev.DeveloperEvaluation.WebApi.Common;
 using Ambev.DeveloperEvaluation.WebApi.Features.Sales.CreateSale;
+using Ambev.DeveloperEvaluation.WebApi.Features.Sales.GetSale;
 using Ambev.DeveloperEvaluation.WebApi.Features.Sales.UpdateSale;
 using AutoMapper;
 using MediatR;
@@ -30,6 +34,33 @@ public class SalesController : BaseController
     {
         _mediator = mediator;
         _mapper = mapper;
+    }
+
+    /// <summary>
+    /// Retrieves a paginated list of sales with optional filters
+    /// </summary>
+    /// <param name="id">The unique identifier of the sale to update.</param>
+    /// <param name="cancellationToken">Cancellation token</param>
+    /// <returns>The sale details if found, otherwise a NotFound result</returns>
+    [HttpGet]
+    [Route("{id:guid}")]
+    [ProducesResponseType(typeof(ApiResponseWithData<GetSaleResponse>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> GetSaleById(Guid id, CancellationToken cancellationToken)
+    {
+        var query = new GetSaleCommand(id);
+
+        var response = await _mediator.Send(query, cancellationToken);
+
+        if (response == null)
+            return NotFound("Sale not found");
+
+        return Ok(new ApiResponseWithData<GetSaleResponse>
+        {
+            Success = true,
+            Message = "Sale retrieved successfully",
+            Data = _mapper.Map<GetSaleResponse>(response)
+        });
     }
 
     /// <summary>

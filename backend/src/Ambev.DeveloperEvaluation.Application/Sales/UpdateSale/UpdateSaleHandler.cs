@@ -1,10 +1,9 @@
-﻿using Ambev.DeveloperEvaluation.Application.Sales.UpdateSale;
-using Ambev.DeveloperEvaluation.Domain.Repositories;
+﻿using Ambev.DeveloperEvaluation.Domain.Repositories;
 using AutoMapper;
 using FluentValidation;
 using MediatR;
 
-namespace Ambev.DeveloperEvaluation.Application.Sales.CreateSale;
+namespace Ambev.DeveloperEvaluation.Application.Sales.UpdateSale;
 
 /// <summary>
 /// Handler for processing CreateSaleCommand requests

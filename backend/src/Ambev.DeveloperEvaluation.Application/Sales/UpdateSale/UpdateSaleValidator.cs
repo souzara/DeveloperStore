@@ -1,7 +1,6 @@
-﻿using Ambev.DeveloperEvaluation.Application.Sales.UpdateSale;
-using FluentValidation;
+﻿using FluentValidation;
 
-namespace Ambev.DeveloperEvaluation.Application.Sales.CreateSale;
+namespace Ambev.DeveloperEvaluation.Application.Sales.UpdateSale;
 
 /// <summary>
 /// Validatpr for UpdateSaleCommand that defines validation rules for sale update command.

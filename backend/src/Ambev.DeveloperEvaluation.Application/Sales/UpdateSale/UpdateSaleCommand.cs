@@ -1,5 +1,4 @@
-﻿using Ambev.DeveloperEvaluation.Application.Sales.CreateSale;
-using FluentValidation.Results;
+﻿using FluentValidation.Results;
 using MediatR;
 
 namespace Ambev.DeveloperEvaluation.Application.Sales.UpdateSale;

@@ -1,7 +1,6 @@
-﻿using Ambev.DeveloperEvaluation.Application.Sales.UpdateSale;
-using FluentValidation;
+﻿using FluentValidation;
 
-namespace Ambev.DeveloperEvaluation.Application.Sales.CreateSale;
+namespace Ambev.DeveloperEvaluation.Application.Sales.CancelSale;
 
 /// <summary>
 /// Validation rules for CancelSaleCommand that ensures the sale ID is provided and not empty.
