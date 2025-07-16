@@ -30,14 +30,11 @@ namespace Ambev.DeveloperEvaluation.WebApi.Middleware
         {
             context.Response.ContentType = "application/json";
             context.Response.StatusCode = StatusCodes.Status400BadRequest;
-            const string defaultMessage = "Validation Failed";
-
-            var message = exception.Errors.Any() ? defaultMessage : exception.Message ?? defaultMessage;
 
             var response = new ApiResponse
             {
                 Success = false,
-                Message = message,
+                Message = "Validation Failed",
                 Errors = exception.Errors
                     .Select(error => (ValidationErrorDetail)error)
             };
