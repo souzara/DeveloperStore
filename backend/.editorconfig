@@ -2,3 +2,4 @@
 
 # IDE0290: Use primary constructor
 csharp_style_prefer_primary_constructors = false
+csharp_style_namespace_declarations = file_scoped:suggestion
