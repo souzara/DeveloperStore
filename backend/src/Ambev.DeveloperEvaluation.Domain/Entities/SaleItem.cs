@@ -85,7 +85,6 @@ namespace Ambev.DeveloperEvaluation.Domain.Entities
             if (unitPrice <= 0)
                 throw new ArgumentException("UnitPrice must be greater than zero.", nameof(unitPrice));
 
-            Id = Guid.NewGuid();
             ProductId = productId;
             ProductName = productName;
             Quantity = quantity;

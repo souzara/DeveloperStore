@@ -29,5 +29,6 @@ internal class CreateSaleItemValidator : AbstractValidator<CreateSaleItemCommand
             .LessThanOrEqualTo(20).WithMessage("Quantity cannot exceed 20.");
         RuleFor(item => item.UnitPrice)
             .GreaterThan(0).WithMessage("UnitPrice must be greater than zero.");
+
     }
 }

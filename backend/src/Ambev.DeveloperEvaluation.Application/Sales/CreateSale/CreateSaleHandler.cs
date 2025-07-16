@@ -38,6 +38,9 @@ public class CreateSaleHandler : IRequestHandler<CreateSaleCommand, CreateSaleRe
             throw new ValidationException(validationResult.Errors);
 
         var sale = _mapper.Map<Domain.Entities.Sale>(command);
+
+        sale.Recalculate();
+
         var createdSale = await _saleRepository.CreateAsync(sale, cancellationToken);
 
         return new CreateSaleResult

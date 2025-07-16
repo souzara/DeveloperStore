@@ -138,7 +138,6 @@ public class SaleTests
         Assert.Equal(customerName, sale.CustomerName);
         Assert.Equal(branchId, sale.BranchId);
         Assert.Equal(branchName, sale.BranchName);
-        Assert.NotEqual(Guid.Empty, sale.Id);
         Assert.True(sale.CreatedAt > startTestAt);
         Assert.Null(sale.UpdatedAt);
         Assert.False(sale.IsCancelled);

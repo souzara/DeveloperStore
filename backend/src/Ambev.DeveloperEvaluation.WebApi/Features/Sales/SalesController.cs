@@ -1,12 +1,17 @@
 ﻿using Ambev.DeveloperEvaluation.Application.Sales.CancelSale;
+using Ambev.DeveloperEvaluation.Application.Sales.CancelSaleItem;
 using Ambev.DeveloperEvaluation.Application.Sales.CreateSale;
+using Ambev.DeveloperEvaluation.Application.Sales.CreateSaleItem;
 using Ambev.DeveloperEvaluation.Application.Sales.DeleteSale;
 using Ambev.DeveloperEvaluation.Application.Sales.GetSale;
+using Ambev.DeveloperEvaluation.Application.Sales.GetSaleItem;
 using Ambev.DeveloperEvaluation.Application.Sales.ListSales;
 using Ambev.DeveloperEvaluation.Application.Sales.UpdateSale;
 using Ambev.DeveloperEvaluation.WebApi.Common;
 using Ambev.DeveloperEvaluation.WebApi.Features.Sales.CreateSale;
+using Ambev.DeveloperEvaluation.WebApi.Features.Sales.CreateSaleItem;
 using Ambev.DeveloperEvaluation.WebApi.Features.Sales.GetSale;
+using Ambev.DeveloperEvaluation.WebApi.Features.Sales.GetSaleItem;
 using Ambev.DeveloperEvaluation.WebApi.Features.Sales.ListSales;
 using Ambev.DeveloperEvaluation.WebApi.Features.Sales.UpdateSale;
 using AutoMapper;
@@ -200,6 +205,92 @@ public class SalesController : BaseController
         {
             Success = true,
             Message = "Sale cancelled successfully"
+        });
+    }
+
+    /// <summary>
+    /// Retrieves all items associated with a specific sale by its unique identifier.
+    /// </summary>
+    /// <param name="id">The unique identifier of the sale for which items are to be retrieved.</param>
+    /// <param name="cancellationToken">Cancellation token</param>
+    /// <returns>An IActionResult containing a list of sale items if found, or a NotFound result if the sale does not exist.</returns>
+    [HttpGet]
+    [Route("{id:guid}/items")]
+    [ProducesResponseType(typeof(ApiResponseWithData<IEnumerable<GetSaleItemResponse>>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> GetSaleItems(Guid id, CancellationToken cancellationToken)
+    {
+        var query = new GetSaleItemsCommand(id);
+
+        var items = await _mediator.Send(query, cancellationToken);
+
+        if (items == null)
+            return NotFound("Sale not found");
+
+        return Ok(new ApiResponseWithData<IEnumerable<GetSaleItemResponse>>
+        {
+            Success = true,
+            Message = "Sale items retrieved successfully",
+            Data = _mapper.Map<IEnumerable<GetSaleItemResponse>>(items)
+        });
+    }
+
+    /// <summary>
+    /// Cancels a specific item in a sale by its unique identifier and the item's unique identifier.
+    /// </summary>
+    /// <param name="id">The unique identifier of the sale for which items are to be retrieved.</param>
+    /// <param name="itemId">The unique identifier of the item to be cancelled within the sale.</param>
+    /// <param name="cancellationToken">Cancellation token</param>
+    /// <returns>An IActionResult indicating the success or failure of the cancellation operation.</returns>
+    [HttpPatch]
+    [Route("{id:guid}/items/{itemId:guid}/cancel")]
+    [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> CancelSaleItem(Guid id, Guid itemId, CancellationToken cancellationToken)
+    {
+        var command = new CancelSaleItemCommand(id, itemId);
+
+        var response = await _mediator.Send(command, cancellationToken);
+
+        if (!response)
+            return NotFound("Sale or Sale Item not found");
+
+        return Ok(new ApiResponse
+        {
+            Success = true,
+            Message = "Sale item cancelled successfully"
+        });
+    }
+
+    /// <summary>
+    /// Creates a new item in an existing sale by its unique identifier.
+    /// </summary>
+    /// <param name="id">The unique identifier of the sale to which the item will be added.</param>
+    /// <param name="request">Request object containing the details of the item to be created, such as product ID, quantity, and price.</param>
+    /// <param name="cancellationToken">Cancellation Token</param>
+    /// <returns>An IActionResult containing the created sale item details if successful, or a BadRequest result if validation fails.</returns>
+    [HttpPost]
+    [Route("{id:guid}/items")]
+    [ProducesResponseType(typeof(ApiResponseWithData<CreateSaleItemResponse>), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> CreateSaleItem(Guid id, [FromBody] CreateSaleItemRequest request, CancellationToken cancellationToken)
+    {
+        var command = _mapper.Map<CreateSaleItemCommand>(request);
+
+        command.SaleId = id;
+
+        var validationResult = command.Validate();
+
+        if (!validationResult.IsValid)
+            return BadRequest(validationResult.Errors);
+
+        var response = await _mediator.Send(command, cancellationToken);
+
+        return Created(string.Empty, new ApiResponseWithData<CreateSaleItemResponse>
+        {
+            Success = true,
+            Message = "Sale item created successfully",
+            Data = _mapper.Map<CreateSaleItemResponse>(response)
         });
     }
 }

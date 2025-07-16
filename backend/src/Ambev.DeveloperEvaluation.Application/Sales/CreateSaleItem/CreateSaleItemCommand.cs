@@ -1,4 +1,5 @@
 ﻿using FluentValidation.Results;
+using MediatR;
 
 namespace Ambev.DeveloperEvaluation.Application.Sales.CreateSaleItem;
 
@@ -15,7 +16,7 @@ namespace Ambev.DeveloperEvaluation.Application.Sales.CreateSaleItem;
 /// <see cref="AbstracValidador{T}"/> to ensure that the fields are correctly
 /// populated and follow the required rules.
 /// </remarks>
-public class CreateSaleItemCommand
+public class CreateSaleItemCommand : IRequest<CreateSaleItemResult>
 {
     /// <summary>
     /// Gets or sets the unique identifier for the product associated with the sale item.
@@ -33,6 +34,12 @@ public class CreateSaleItemCommand
     /// Gets or sets the unit price of the product in the sale item.
     /// </summary>
     public decimal UnitPrice { get; set; }
+
+    /// <summary>
+    /// Gets or sets the unique identifier of the sale to which this item belongs.
+    /// </summary>
+    public Guid SaleId { get; set; }
+
 
     /// <summary>
     /// Validates the current instance of <see cref="CreateSaleItemCommand"/> using the <see cref="CreateSaleItemValidator"/>.

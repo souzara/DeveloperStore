@@ -46,6 +46,19 @@ public class SaleItemRepository : ISaleItemRepository
     }
 
     /// <summary>
+    /// Retrieves a sale item by its unique identifier, including the associated sale details
+    /// </summary>
+    /// <param name="id">The uunique identifier of the sale item</param>
+    /// <param name="cancellationToken">Cancellation token</param>
+    /// <returns>The sale item if found, including its associated sale details</returns>
+    public async Task<SaleItem?> GetByIdWithSaleAsync(Guid id, CancellationToken cancellationToken = default)
+    {
+        return await _context.SaleItems
+            .Include(si => si.Sale)
+            .FirstOrDefaultAsync(si => si.Id == id, cancellationToken);
+    }
+
+    /// <summary>
     /// Retrieves all sale items associated with a specific sale by its unique identifier
     /// </summary>
     /// <param name="saleId">Sale unique identifier</param>
@@ -111,4 +124,6 @@ public class SaleItemRepository : ISaleItemRepository
         var updated = await _context.SaveChangesAsync(cancellationToken);
         return updated > 0;
     }
+
+
 }

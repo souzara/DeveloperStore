@@ -85,7 +85,6 @@ namespace Ambev.DeveloperEvaluation.Domain.Entities
             if (string.IsNullOrWhiteSpace(branchName))
                 throw new ArgumentException("Branch name cannot be null or empty.", nameof(branchName));
 
-            Id = Guid.NewGuid();
             SaleNumber = saleNumber;
             Date = date;
             CustomerId = curstomerId;
@@ -136,9 +135,29 @@ namespace Ambev.DeveloperEvaluation.Domain.Entities
             foreach (var item in Items)
                 item.Cancel();
 
+            RecalculateTotal();
+        }
+
+        /// <summary>
+        /// Recalculates the total amount of the sale based on its items.
+        /// </summary>
+        public void RecalculateTotal()
+        {
             TotalAmount = CalculateTotal();
             UpdatedAt = DateTime.UtcNow;
         }
+
+        /// <summary>
+        /// Recalculates the sale's status based on its items.
+        /// </summary>
+        public void Recalculate()
+        {
+            if (Items.All(x => x.IsCancelled))
+                IsCancelled = true;
+
+            RecalculateTotal();
+        }
+
 
         /// <summary>
         /// Updates the sale with new details.
@@ -177,5 +196,7 @@ namespace Ambev.DeveloperEvaluation.Domain.Entities
             BranchName = branchName;
             UpdatedAt = DateTime.UtcNow;
         }
+
+
     }
 }
