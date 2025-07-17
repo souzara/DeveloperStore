@@ -1,4 +1,6 @@
-﻿using Ambev.DeveloperEvaluation.Domain.Repositories;
+﻿using Ambev.DeveloperEvaluation.Domain.Events;
+using Ambev.DeveloperEvaluation.Domain.Repositories;
+using Ambev.DeveloperEvaluation.Domain.Services;
 using AutoMapper;
 using FluentValidation;
 using MediatR;
@@ -11,6 +13,7 @@ namespace Ambev.DeveloperEvaluation.Application.Sales.CreateSale;
 public class CreateSaleHandler : IRequestHandler<CreateSaleCommand, CreateSaleResult>
 {
     private readonly ISaleRepository _saleRepository;
+    private readonly IEventBusService _eventBusService;
     private readonly IMapper _mapper;
 
     /// <summary>
@@ -18,9 +21,10 @@ public class CreateSaleHandler : IRequestHandler<CreateSaleCommand, CreateSaleRe
     /// </summary>
     /// <param name="saleRepository">The sale repository</param>
     /// <param name="mapper">The AutoMapper instance</param>
-    public CreateSaleHandler(ISaleRepository saleRepository, IMapper mapper)
+    public CreateSaleHandler(ISaleRepository saleRepository, IEventBusService eventBusService, IMapper mapper)
     {
         _saleRepository = saleRepository;
+        _eventBusService = eventBusService;
         _mapper = mapper;
     }
 
@@ -43,9 +47,10 @@ public class CreateSaleHandler : IRequestHandler<CreateSaleCommand, CreateSaleRe
 
         var createdSale = await _saleRepository.CreateAsync(sale, cancellationToken);
 
-        return new CreateSaleResult
-        {
-            Id = createdSale.Id
-        };
+        var saleCreatedEvent = _mapper.Map<SaleCreatedEvent>(createdSale);
+
+        await _eventBusService.PublishAsync(saleCreatedEvent);
+
+        return _mapper.Map<CreateSaleResult>(createdSale);
     }
 }

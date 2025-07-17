@@ -1,3 +1,4 @@
+using Ambev.DeveloperEvaluation.Application.Sales.CreateSale;
 using Ambev.DeveloperEvaluation.Domain.Entities;
 using Bogus;
 
@@ -42,6 +43,27 @@ public static class SaleTestData
     {
         return SaleFaker.Generate();
     }
+
+    /// <summary>
+    /// Generates a valid Sale entity based on the provided CreateSaleCommand.
+    /// </summary>
+    /// <param name="createSaleCommand">Create sale command</param>
+    /// <returns>A valid Sale entity populated with data from the CreateSaleCommand.</returns>
+    public static Sale GenerateValidSale(CreateSaleCommand createSaleCommand)
+    {
+        var sale = new Sale(createSaleCommand.SaleNumber,
+                        createSaleCommand.Date,
+                        createSaleCommand.CustomerId,
+                        createSaleCommand.CustomerName,
+                        createSaleCommand.BranchId,
+                        createSaleCommand.BranchName);
+
+        foreach (var item in createSaleCommand.Items)
+            sale.Items.Add(new SaleItem(item.ProductId, item.ProductName, item.Quantity, item.UnitPrice));
+
+        return sale;
+    }
+
 
     /// <summary>
     /// Generates a valid sale number using Faker.

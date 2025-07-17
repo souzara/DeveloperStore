@@ -54,11 +54,11 @@ public class SaleFilter
     /// <summary>
     /// Gets or sets the page number for pagination. Defaults to 1.
     /// </summary>
-    public int Page { get; private set; } = 1;
+    public int Page { get; private set; }
     /// <summary>
     /// Gets or sets the page size for pagination. Defaults to 20.
     /// </summary>
-    public int PageSize { get; private set; } = 20;
+    public int PageSize { get; private set; }
 
     /// <summary>
     /// Initializes a new instance of the SaleFilter class with the specified parameters.

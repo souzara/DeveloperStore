@@ -1,4 +1,4 @@
-﻿namespace Ambev.DeveloperEvaluation.Domain.Common
+﻿namespace Ambev.DeveloperEvaluation.Application.Common
 {
     /// <summary>
     /// Represents a paginated result set for a collection of items.
