@@ -11,7 +11,6 @@ namespace Ambev.DeveloperEvaluation.Domain.Entities.Mongo
     [BsonIgnoreExtraElements]
     public class EventLog
     {
-
         /// <summary>
         /// Unique identifier for the event log.
         /// </summary>

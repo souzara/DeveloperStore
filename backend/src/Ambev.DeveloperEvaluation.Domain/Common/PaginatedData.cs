@@ -18,7 +18,7 @@
         /// <summary>
         /// The total number of items across all pages.
         /// </summary>
-        public int TotalItems { get; }
+        public long TotalItems { get; }
 
         public int TotalPages => (int)Math.Ceiling((double)TotalItems / PageSize);
 
@@ -29,7 +29,7 @@
         /// <param name="page">Current page</param>
         /// <param name="pageSize">Page size</param>
         /// <param name="totalItems">Total of items</param>
-        public PaginatedData(IReadOnlyList<T> items, int page, int pageSize, int totalItems)
+        public PaginatedData(IReadOnlyList<T> items, int page, int pageSize, long totalItems)
         {
             Items = items;
             Page = page;
