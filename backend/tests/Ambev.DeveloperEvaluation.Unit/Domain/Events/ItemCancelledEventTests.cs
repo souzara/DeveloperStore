@@ -16,10 +16,12 @@ public class ItemCancelledEventTests
     public void ItemCancelledEvent_ShouldInitializeWithSaleItemId()
     {
         // Arrange
+        var saleId = Guid.NewGuid();
         var saleItemId = Guid.NewGuid();
         // Act
-        var itemCancelledEvent = new ItemCancelledEvent(saleItemId);
+        var itemCancelledEvent = new SaleItemCancelledEvent(saleId, saleItemId);
         // Assert
+        Assert.Equal(saleId, itemCancelledEvent.SaleId);
         Assert.Equal(saleItemId, itemCancelledEvent.SaleItemId);
     }
 }
