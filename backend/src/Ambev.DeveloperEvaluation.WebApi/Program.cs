@@ -8,6 +8,7 @@ using Ambev.DeveloperEvaluation.ORM;
 using Ambev.DeveloperEvaluation.WebApi.Middleware;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using MongoDB.Driver;
 using Serilog;
 
 namespace Ambev.DeveloperEvaluation.WebApi;
@@ -35,6 +36,19 @@ public class Program
                     b => b.MigrationsAssembly("Ambev.DeveloperEvaluation.ORM")
                 )
             );
+
+            builder.Services.AddSingleton(sp =>
+            {
+                return new MongoClient(builder.Configuration.GetConnectionString("MongoDb"));
+            });
+
+            builder.Services.AddScoped(sp =>
+            {
+                var client = sp.GetRequiredService<MongoClient>();
+                return client.GetDatabase("developer_evaluation");
+            });
+
+
 
             builder.Services.AddJwtAuthentication(builder.Configuration);
 
@@ -78,6 +92,7 @@ public class Program
         }
         catch (Exception ex)
         {
+            Console.WriteLine(ex);
             Log.Fatal(ex, "Application terminated unexpectedly");
         }
         finally

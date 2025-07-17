@@ -1,5 +1,5 @@
 ﻿using Ambev.DeveloperEvaluation.Application.Sales.GetSale;
-using Ambev.DeveloperEvaluation.Domain.Common;
+using Ambev.DeveloperEvaluation.Application.Common;
 using Ambev.DeveloperEvaluation.Domain.Filters.Sale;
 using Ambev.DeveloperEvaluation.Domain.Repositories;
 using AutoMapper;
