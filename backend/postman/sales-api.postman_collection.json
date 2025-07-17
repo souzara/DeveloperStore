@@ -49,7 +49,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"email\": \"ralves.f@outlook.com\",\n  \"password\": \"ev@luAt10n\"\n}",
+							"raw": "{\n  \"email\": \"user@email.com\",\n  \"password\": \"ev@luAt10n\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -519,7 +519,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"username\": \"nina\",\n  \"password\": \"ev@luAt10n\",\n  \"phone\": \"11998746287\",\n  \"email\": \"ninarts@outlook.com\",\n  \"status\": 1,\n  \"role\": 3\n}",
+							"raw": "{\n  \"username\": \"User\",\n  \"password\": \"ev@luAt10n\",\n  \"phone\": \"11987654321\",\n  \"email\": \"user@email.com\",\n  \"status\": 1,\n  \"role\": 3\n}",
 							"options": {
 								"raw": {
 									"language": "json"
