@@ -1,12 +1,12 @@
 ﻿using Ambev.DeveloperEvaluation.Application.EventLogs.ListEventLogs;
-using Ambev.DeveloperEvaluation.Domain.Common;
+using Ambev.DeveloperEvaluation.Application.Common;
 using Ambev.DeveloperEvaluation.Domain.Filters.EventLogs;
 using Ambev.DeveloperEvaluation.Domain.Repositories.Mongo;
 using AutoMapper;
 using FluentValidation;
 using MediatR;
 
-namespace Ambev.DeveloperEvaluation.Application.Sales.ListSales;
+namespace Ambev.DeveloperEvaluation.Application.EventLogs.ListEventLogs;
 
 /// <summary>
 /// Handler for processing the ListEventLogsCommand to retrieve a paginated list of event logs.

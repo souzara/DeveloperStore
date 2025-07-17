@@ -1,5 +1,5 @@
-﻿using Ambev.DeveloperEvaluation.Application.EventLogs.ListEventLogs;
-using Ambev.DeveloperEvaluation.Domain.Common;
+﻿using Ambev.DeveloperEvaluation.Application.Common;
+using Ambev.DeveloperEvaluation.Application.EventLogs.ListEventLogs;
 using Ambev.DeveloperEvaluation.WebApi.Common;
 using AutoMapper;
 

@@ -1,9 +1,9 @@
-﻿using Ambev.DeveloperEvaluation.Application.EventLogs.ListEventLogs;
+﻿using Ambev.DeveloperEvaluation.Application.Common;
 using Ambev.DeveloperEvaluation.Domain.Common;
 using Ambev.DeveloperEvaluation.Domain.Entities.Mongo;
 using Ambev.DeveloperEvaluation.Domain.Filters.EventLogs;
 using AutoMapper;
-namespace Ambev.DeveloperEvaluation.Application.Sales.ListSales;
+namespace Ambev.DeveloperEvaluation.Application.EventLogs.ListEventLogs;
 
 /// <summary>
 /// </summary>
