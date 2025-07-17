@@ -92,6 +92,7 @@ public class Program
         }
         catch (Exception ex)
         {
+            Console.WriteLine(ex);
             Log.Fatal(ex, "Application terminated unexpectedly");
         }
         finally

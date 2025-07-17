@@ -1,0 +1,681 @@
+{
+	"info": {
+		"_postman_id": "07701781-3aac-477c-a83f-9aa2790fbe7f",
+		"name": "sales-api",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "544590"
+	},
+	"item": [
+		{
+			"name": "auth",
+			"item": [
+				{
+					"name": "/auth",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// parseia o body da resposta\r",
+									"const json = pm.response.json();\r",
+									"\r",
+									"// extrai o token\r",
+									"const token = json.data?.data?.token;\r",
+									"\r",
+									"// se existir, salva na env\r",
+									"if (token) {\r",
+									"    pm.environment.set(\"access_token\", token);\r",
+									"    console.log(\"✔ access_token saved:\", token);\r",
+									"} else {\r",
+									"    console.warn(\"⚠️ access_token not found in response\");\r",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "accept",
+								"value": "text/plain"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"ralves.f@outlook.com\",\n  \"password\": \"ev@luAt10n\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{apI_url}}/api/auth",
+							"host": [
+								"{{apI_url}}"
+							],
+							"path": [
+								"api",
+								"auth"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "sales",
+			"item": [
+				{
+					"name": "/sales/{id}",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "accept",
+								"value": "text/plain"
+							}
+						],
+						"url": {
+							"raw": "{{apI_url}}/api/Sales/3af9be61-dcae-4959-8b1e-0e78fdc35b55",
+							"host": [
+								"{{apI_url}}"
+							],
+							"path": [
+								"api",
+								"Sales",
+								"3af9be61-dcae-4959-8b1e-0e78fdc35b55"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/sales/{filter}",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "accept",
+								"value": "text/plain"
+							}
+						],
+						"url": {
+							"raw": "{{apI_url}}/api/Sales?Page=1&PageSize=200",
+							"host": [
+								"{{apI_url}}"
+							],
+							"path": [
+								"api",
+								"Sales"
+							],
+							"query": [
+								{
+									"key": "SaleIds",
+									"value": "cdf9148a-beb3-4bcf-8d17-76accc307ed2",
+									"disabled": true
+								},
+								{
+									"key": "SaleIds",
+									"value": "78d8cd71-fc65-4fec-8a91-f5cfd634b1d6",
+									"disabled": true
+								},
+								{
+									"key": "SaleNumber",
+									"value": "SN869DF23397394",
+									"disabled": true
+								},
+								{
+									"key": "BranchId",
+									"value": "ef17a71a-733f-4f68-9eda-40e1ab011faa",
+									"disabled": true
+								},
+								{
+									"key": "BranchName",
+									"value": "Centro",
+									"disabled": true
+								},
+								{
+									"key": "CustomerId",
+									"value": "360ce30b-55a1-4225-94e9-801c651cdb8c",
+									"disabled": true
+								},
+								{
+									"key": "CustomerName",
+									"value": "Beatriz Rodrigues",
+									"disabled": true
+								},
+								{
+									"key": "FromDate",
+									"value": "2025-06-12T04:01:31.167Z",
+									"disabled": true
+								},
+								{
+									"key": "IsCancelled",
+									"value": "True",
+									"disabled": true
+								},
+								{
+									"key": "ToDate",
+									"value": "2025-06-14T14:01:31.167Z",
+									"disabled": true
+								},
+								{
+									"key": "Page",
+									"value": "1"
+								},
+								{
+									"key": "PageSize",
+									"value": "200"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/sales",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "accept",
+								"value": "text/plain"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"saleNumber\": \"X1Y2Z3A4B5C6D7E\",\n    \"date\": \"2025-07-13T08:19:07.480Z\",\n    \"customerId\": \"3fa85f64-5717-4562-b3fc-2c963f66afa6\",\n    \"customerName\": \"Maria Silva\",\n    \"branchId\": \"b13e8f46-71a7-4562-b3fc-9e2f3d66af02\",\n    \"branchName\": \"Filial Centro\",\n    \"items\": [\n        {\n            \"productId\": \"d549ec11-22c1-4f3b-9abc-4a2b3c4d5e6f\",\n            \"productName\": \"Smartwatch Samsung\",\n            \"quantity\": 5,\n            \"unitPrice\": 99.90\n        },\n        {\n            \"productId\": \"3fa85f64-5717-4562-b3fc-2c963f66afa6\",\n            \"productName\": \"Phone QCY ANC 2\",\n            \"quantity\": 3,\n            \"unitPrice\": 250.35\n        }\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{apI_url}}/api/sales",
+							"host": [
+								"{{apI_url}}"
+							],
+							"path": [
+								"api",
+								"sales"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/sales/{id}",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "accept",
+								"value": "text/plain"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"saleNumber\": \"Y1Y2Z3A4B5C6D7E\",\n  \"date\": \"2025-07-14T23:59:34.623Z\",\n  \"customerId\": \"3fa85f64-5717-4562-b3fc-2c963f66afa6\",\n  \"customerName\": \"Ricardo Alves\",\n  \"branchId\": \"3fa85f64-5717-4562-b3fc-2c963f66afa6\",\n  \"branchName\": \"Matriz\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{apI_url}}/api/Sales/3af9be61-dcae-4959-8b1e-0e78fdc35b55",
+							"host": [
+								"{{apI_url}}"
+							],
+							"path": [
+								"api",
+								"Sales",
+								"3af9be61-dcae-4959-8b1e-0e78fdc35b55"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/sales/{id}",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "accept",
+								"value": "text/plain"
+							}
+						],
+						"url": {
+							"raw": "{{apI_url}}/api/Sales/b4fc9194-1f78-4cfb-8793-a47cb1abecb8",
+							"host": [
+								"{{apI_url}}"
+							],
+							"path": [
+								"api",
+								"Sales",
+								"b4fc9194-1f78-4cfb-8793-a47cb1abecb8"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/sales/{id}/cancel",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "accept",
+								"value": "text/plain"
+							}
+						],
+						"url": {
+							"raw": "{{apI_url}}/api/Sales/3af9be61-dcae-4959-8b1e-0e78fdc35b55/cancel",
+							"host": [
+								"{{apI_url}}"
+							],
+							"path": [
+								"api",
+								"Sales",
+								"3af9be61-dcae-4959-8b1e-0e78fdc35b55",
+								"cancel"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "sale-items",
+			"item": [
+				{
+					"name": "/sales/{id}/items",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "accept",
+								"value": "text/plain"
+							}
+						],
+						"url": {
+							"raw": "{{apI_url}}/api/Sales/69a5be11-3782-47a8-a79d-a2091645b19b/items",
+							"host": [
+								"{{apI_url}}"
+							],
+							"path": [
+								"api",
+								"Sales",
+								"69a5be11-3782-47a8-a79d-a2091645b19b",
+								"items"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/sales/{id}/items/{id}/cancel",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "accept",
+								"value": "text/plain"
+							}
+						],
+						"url": {
+							"raw": "{{apI_url}}/api/Sales/3af9be61-dcae-4959-8b1e-0e78fdc35b55/items/58535525-58fb-41d2-8fc9-52b3b78b879c/cancel",
+							"host": [
+								"{{apI_url}}"
+							],
+							"path": [
+								"api",
+								"Sales",
+								"3af9be61-dcae-4959-8b1e-0e78fdc35b55",
+								"items",
+								"58535525-58fb-41d2-8fc9-52b3b78b879c",
+								"cancel"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/sales/{id}/items",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "accept",
+								"value": "text/plain"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"productId\": \"3fa85f64-5717-4562-b3fc-2c963f66afa6\",\n  \"productName\": \"Phone QCY ANC 2\",\n  \"quantity\": 3,\n  \"unitPrice\": 250.35\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{apI_url}}/api/Sales/57becf2f-7705-4ace-a1b3-576bb989594d/items",
+							"host": [
+								"{{apI_url}}"
+							],
+							"path": [
+								"api",
+								"Sales",
+								"57becf2f-7705-4ace-a1b3-576bb989594d",
+								"items"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "users",
+			"item": [
+				{
+					"name": "/users",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "accept",
+								"value": "text/plain"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"username\": \"nina\",\n  \"password\": \"ev@luAt10n\",\n  \"phone\": \"11998746287\",\n  \"email\": \"ninarts@outlook.com\",\n  \"status\": 1,\n  \"role\": 3\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{apI_url}}/api/users",
+							"host": [
+								"{{apI_url}}"
+							],
+							"path": [
+								"api",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/users/{id}",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "accept",
+								"value": "text/plain"
+							}
+						],
+						"url": {
+							"raw": "{{apI_url}}/api/users/8a7b6c81-60c9-4c25-b44e-400cd1c41b27",
+							"host": [
+								"{{apI_url}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"8a7b6c81-60c9-4c25-b44e-400cd1c41b27"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/users",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "accept",
+								"value": "text/plain"
+							}
+						],
+						"url": {
+							"raw": "{{apI_url}}/api/users/8a7b6c81-60c9-4c25-b44e-400cd1c41b27",
+							"host": [
+								"{{apI_url}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"8a7b6c81-60c9-4c25-b44e-400cd1c41b27"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "event-logs",
+			"item": [
+				{
+					"name": "/eventlogs",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "accept",
+								"value": "text/plain"
+							}
+						],
+						"url": {
+							"raw": "{{apI_url}}/api/EventLogs?Page=2&PageSize=1",
+							"host": [
+								"{{apI_url}}"
+							],
+							"path": [
+								"api",
+								"EventLogs"
+							],
+							"query": [
+								{
+									"key": "EventId",
+									"value": "43b63323-f648-4e28-a1b7-5a9eab3e653a",
+									"disabled": true
+								},
+								{
+									"key": "EventType",
+									"value": "Ambev.DeveloperEvaluation.Domain.Events.SaleCreatedEvent",
+									"disabled": true
+								},
+								{
+									"key": "FromDate",
+									"value": "2025-07-15T01:00:25.955Z",
+									"disabled": true
+								},
+								{
+									"key": "ToDate",
+									"value": "2025-07-17T00:00:25.955Z",
+									"disabled": true
+								},
+								{
+									"key": "Page",
+									"value": "2"
+								},
+								{
+									"key": "PageSize",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
